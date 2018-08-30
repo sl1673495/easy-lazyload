@@ -126,6 +126,7 @@
       error: options.error || DEFAULT_URL,
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
       preLoad: options.preLoad || 1.3,
+      delay: options.delay
     }
   }
 
@@ -195,25 +196,12 @@
 
   Load.prototype._initIntersectionObserver = function () {
     var _this = this
-    _this._observer = new IntersectionObserver(_this._observerHandler.bind(_this), {
-      root: _this.el,
-      rootMargin: _this.el.clientHeight * (_this.options.preLoad - 1) + 'px ' + _this.el.clientWidth * (_this.options.preLoad - 1) + 'px'
-    })
+    _this._observer = new IntersectionObserver(_this._observerHandler.bind(_this))
 
     utils.forEach(_this.imageListeners, function (imageListener) {
       _this._observer.observe(imageListener.el)
       imageListener._observer = _this._observer
     })
-  }
-
-  Load.prototype._initNormalEvents = function () {
-    var _this = this
-    var scrollEl = utils.scrollParent(_this.el)
-    utils.forEach(DEFAULT_EVENTS, function(eventName) {
-      scrollEl.addEventListener(eventName, _this.lazyloadHandler)
-    })
-
-    _this._eventBindEl = scrollEl
   }
 
   Load.prototype._observerHandler = function (entries, observer) {
@@ -227,6 +215,17 @@
       }
     })
   }
+
+  Load.prototype._initNormalEvents = function () {
+    var _this = this
+    var scrollEl = utils.scrollParent(_this.el)
+    utils.forEach(DEFAULT_EVENTS, function(eventName) {
+      scrollEl.addEventListener(eventName, _this.lazyloadHandler)
+    })
+
+    _this._eventBindEl = scrollEl
+  }
+
 
   var ImageListener = function (img, options) {
     this.el = img
@@ -253,7 +252,15 @@
       this.src,
       function onSuccess(result) {
         var src = result.src
-        _this.render('success', src)
+
+        var delay = _this.options.delay
+        if (delay) {
+          setTimeout(function() {
+            _this.render('success', src)
+          }, delay);
+        }else {
+          _this.render('success', src)
+        }
         _this.finishLoading()
       },
       function onError() {
