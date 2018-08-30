@@ -10,8 +10,8 @@
       display: inline-block;
       width: 40%;
       height: 1000px;
+      border:0;
     }
-
   </style>
 </head>
 <body>
@@ -37,9 +37,7 @@
   </div>
   <script src="./easy-lazyload.js"></script>
   <script>
-    var loader = new EasyLazyLoad('.img-wrap', {
-      loading: './assets/images/loading.gif'
-    })
+    var loader = new EasyLazyLoad('.img-wrap')
     loader.init()
   </script>
 </body>
