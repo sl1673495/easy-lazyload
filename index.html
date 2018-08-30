@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <style>
+    img {
+      display: inline-block;
+      width: 40%;
+      height: 1000px;
+    }
+
+  </style>
+</head>
+<body>
+  <div class="img-wrap">
+    <img src="./assets/images/timg1.jpeg"/>
+    <img data-src="./assets/images/timg2.jpeg" />
+    <img data-src="./assets/images/timg3.jpeg" />
+    <img data-src="./assets/images/timg4.jpeg" />
+    <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" />
+    <img src="./assets/images/timg1.jpeg" />
+    <img data-src="./assets/images/timg2.jpeg" />
+    <img data-src="./assets/images/timg3.jpeg" />
+    <img data-src="./assets/images/timg4.jpeg" />
+    <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" /><img src="./assets/images/timg1.jpeg" />
+    <img data-src="./assets/images/timg2.jpeg" />
+    <img data-src="./assets/images/timg3.jpeg" />
+    <img data-src="./assets/images/timg4.jpeg" />
+    <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" /><img src="./assets/images/timg1.jpeg" />
+    <img data-src="./assets/images/timg2.jpeg" />
+    <img data-src="./assets/images/timg3.jpeg" />
+    <img data-src="./assets/images/timg4.jpeg" />
+    <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" />
+  </div>
+  <script src="./easy-lazyload.js"></script>
+  <script>
+    var loader = new EasyLazyLoad('.img-wrap', {
+      loading: './assets/images/loading.gif'
+    })
+    loader.init()
+  </script>
+</body>
+</html>
