@@ -125,7 +125,7 @@
       loading: options.loading || DEFAULT_URL,
       error: options.error || DEFAULT_URL,
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
-      preLoad: options.preLoad || 1.3,
+      preLoad: options.preLoad || 1,
       delay: options.delay
     }
   }
