@@ -176,12 +176,11 @@
 
   Load.prototype._initEvents = function () {
     this.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
-
     // 优先采用IntersectionObserver
     if (hasIntersectionObserver) {
-      this._initNormalEvents()
-    } else {
       this._initIntersectionObserver()
+    } else {
+      this._initNormalEvents()
     }
   }
 
