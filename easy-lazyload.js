@@ -113,6 +113,9 @@
         }
       }
       return i
+    },
+    isUndef: function(val) {
+      return val === null || val === undefined
     }
   }
 
@@ -129,7 +132,8 @@
       error: options.error || DEFAULT_URL,
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
       preLoad: options.preLoad || 1.1,
-      delay: options.delay
+      delay: options.delay,
+      observer: utils.isUndef(options.observer)? true : options.observer
     }
 
     this.init()
@@ -180,7 +184,7 @@
 
   Load.prototype._initEvents = function () {
     // 优先采用IntersectionObserver
-    if (hasIntersectionObserver) {
+    if (hasIntersectionObserver && this.options.observer) {
       this._initIntersectionObserver()
     } else {
       this._initNormalEvents()
@@ -201,7 +205,7 @@
     var _this = this
     utils.forEach(entries, function (entry) {
       // fixed: 低版本安卓浏览器没有isIntersecting属性
-      var isEnter = entry.isIntersecting == null ? entry.intersectionRatio : entry.isIntersecting
+      var isEnter = utils.isUndef(entry.isIntersecting) ? entry.intersectionRatio : entry.isIntersecting
       if (isEnter) {
         var img = entry.target
         var imgId = utils.getDataSrc(img, 'id')
