@@ -1,5 +1,5 @@
 (function () {
-  var DEFAULT_URL = ''
+  var DEFAULT_URL = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7'
   var DEFAULT_EVENTS = ['scroll', 'wheel', 'mousewheel', 'resize', 'animationend', 'transitionend', 'touchmove']
   var hasIntersectionObserver = Boolean(window['IntersectionObserver'])
   var supportsPassive = (function () {
@@ -80,7 +80,7 @@
     },
     loadImageAsync: function (src, onSuccess, onError) {
       onSuccess = onSuccess || utils.noop
-      onError = onError || utils.onError
+      onError = onError || utils.noop
 
       var image = new Image()
       image.src = src
@@ -175,9 +175,10 @@
       observer: utils.isUndef(options.observer) ? true : options.observer
     }
 
+    this._preLoad()    
     this.init()
   }
-
+  
   Load.prototype.init = function () {
     this._initImageListeners()
     this._initEvents()
@@ -198,6 +199,15 @@
     this.destroy()
     this.init()
   }
+
+  Load.prototype._preLoad = function() {
+    var loading = this.options.loading
+    var error = this.options.error
+    
+    utils.loadImageAsync(loading)
+    utils.loadImageAsync(error)
+  }
+
 
   Load.prototype._initImageListeners = function () {
     var _this = this
