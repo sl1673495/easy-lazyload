@@ -18,6 +18,10 @@
       var nativeEach = Array.prototype.forEach
       if (nativeEach) {
         return nativeEach.call(arr, fn)
+      }else {
+        for (var i = 0; i < arr.length; i++) {
+          fn(arr[i], i)
+        }
       }
     },
     getDataSrc: function (el, attr) {
@@ -46,7 +50,6 @@
       if (!(el instanceof HTMLElement)) {
         return window
       }
-
       let parent = el
       while (parent) {
         if (parent === document.body || parent === document.documentElement) {
@@ -125,7 +128,7 @@
       loading: options.loading || DEFAULT_URL,
       error: options.error || DEFAULT_URL,
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
-      preLoad: options.preLoad || 1,
+      preLoad: options.preLoad || 1.1,
       delay: options.delay
     }
   }
@@ -133,8 +136,6 @@
   Load.prototype.init = function () {
     this._initImageListeners()
     this._initEvents()
-
-    this.lazyloadHandler()
   }
 
   Load.prototype.destroy = function() {
@@ -176,22 +177,12 @@
   }
 
   Load.prototype._initEvents = function () {
-    this.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
     // 优先采用IntersectionObserver
     if (hasIntersectionObserver) {
       this._initIntersectionObserver()
     } else {
       this._initNormalEvents()
     }
-  }
-
-  Load.prototype._lazyloadHandler = function () {
-    var _this = this
-    utils.forEach(_this.imageListeners, function (image) {
-      if (image.checkInView()) {
-        image.load()
-      }
-    })
   }
 
   Load.prototype._initIntersectionObserver = function () {
@@ -218,22 +209,37 @@
 
   Load.prototype._initNormalEvents = function () {
     var _this = this
+    _this.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
+
     var scrollEl = utils.scrollParent(_this.el)
     utils.forEach(DEFAULT_EVENTS, function(eventName) {
       scrollEl.addEventListener(eventName, _this.lazyloadHandler)
     })
 
     _this._eventBindEl = scrollEl
+    _this.lazyloadHandler()
+  }
+
+  Load.prototype._lazyloadHandler = function () {
+    var _this = this
+    utils.forEach(_this.imageListeners, function (image) {
+      // 如果有_observer属性说明是observer触发的事件 直接load
+      if (image.checkInView()) {
+        image.load()
+      }
+    })
   }
 
 
   var ImageListener = function (img, options) {
     this.el = img
     this.src = utils.getDataSrc(img, 'src')
+    this.options = options
     this.rect = null
+    this._sources = null
+    this._observer = null
     this.loading = false
     this.loaded = false
-    this.options = options
   }
 
   ImageListener.prototype.render = function (state, src) {
@@ -274,7 +280,7 @@
     var _this = this
     _this.loading = false
     _this.loaded = true
-    var sources = this._sources
+    var sources = _this._sources
     var index = utils.findIndex(sources, function (listener) {
       return utils.getDataSrc(listener.el, 'id') === utils.getDataSrc(_this.el, 'id')
     })
