@@ -19,6 +19,14 @@
 
   var utils = {
     noop: function () { },
+    arrayFrom: function (arrLike) {
+      var len = arrLike.length
+      var list = []
+      for (var i = 0; i < len; i++) {
+        list.push(arrLike[i])
+      }
+      return list
+    },
     forEach: function (arr, fn) {
       var nativeEach = Array.prototype.forEach
       if (nativeEach) {
