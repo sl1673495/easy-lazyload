@@ -158,12 +158,24 @@
   }
 
   var Load = function (el, options) {
+    this._initProperties(el, options)
+    this._initOptions(options)
+    this._preLoad()    
+    this._initImageListeners()
+    this._initEvents()
+  }
+
+  // 初始化属性
+  Load.prototype._initProperties = function(el, options) {
     this.el = document.querySelector(el) || document.body
     this.imageListeners = []
     this.imageListenersMap = {}
     this.lazyloadHandler = null
     this._eventBindEl = null
+  }
 
+  // 规范化配置  
+  Load.prototype._initOptions = function(options) {
     options = options || {}
     this.options = {
       throttleWait: options.throttleWait || 100,
@@ -174,32 +186,9 @@
       delay: options.delay,
       observer: utils.isUndef(options.observer) ? true : options.observer
     }
-
-    this._preLoad()    
-    this.init()
-  }
-  
-  Load.prototype.init = function () {
-    this._initImageListeners()
-    this._initEvents()
   }
 
-  Load.prototype.destroy = function () {
-    var _this = this
-    if (_this._observer) {
-      _this._observer.disconnect()
-    } else {
-      utils.forEach(DEFAULT_EVENTS, function (eventName) {
-        utils.removeEvent(_this._eventBindEl, eventName, _this.lazyloadHandler)
-      })
-    }
-  }
-
-  Load.prototype.refresh = function () {
-    this.destroy()
-    this.init()
-  }
-
+  // 预加载loading和error图
   Load.prototype._preLoad = function() {
     var loading = this.options.loading
     var error = this.options.error
@@ -209,6 +198,7 @@
   }
 
 
+  // 加载图片监听类
   Load.prototype._initImageListeners = function () {
     var _this = this
     var images = _this.el.querySelectorAll('img')
@@ -231,6 +221,7 @@
     })
   }
 
+  // 加载事件
   Load.prototype._initEvents = function () {
     // 优先采用IntersectionObserver
     if (hasIntersectionObserver && this.options.observer) {
@@ -264,6 +255,7 @@
     })
   }
 
+  // 降级方案, 监听事件去判断图片是否进入视口
   Load.prototype._initNormalEvents = function () {
     var _this = this
     _this.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
@@ -287,16 +279,31 @@
     })
   }
 
+  // api 用于dom移除后删除事件监听
+  Load.prototype.destroy = function () {
+    var _this = this
+    if (_this._observer) {
+      _this._observer.disconnect()
+    } else {
+      utils.forEach(DEFAULT_EVENTS, function (eventName) {
+        utils.removeEvent(_this._eventBindEl, eventName, _this.lazyloadHandler)
+      })
+    }
+  }
+  
 
   var ImageListener = function (img, options) {
     this.el = img
     this.src = utils.getDataSrc(img, 'src')
     this.options = options
     this.rect = null
-    this._sources = null
-    this._observer = null
     this.loading = false
     this.loaded = false
+
+    // 存放来源的监听数组，用于从数组中移除自身。
+    this._sources = null
+    // 存放来源的_observer实例
+    this._observer = null
   }
 
   ImageListener.prototype.render = function (state, src) {
