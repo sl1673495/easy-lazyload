@@ -131,6 +131,8 @@
       preLoad: options.preLoad || 1.1,
       delay: options.delay
     }
+
+    this.init()
   }
 
   Load.prototype.init = function () {
