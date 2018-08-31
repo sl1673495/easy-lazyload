@@ -172,6 +172,7 @@
     this.imageListenersMap = {}
     this.lazyloadHandler = null
     this._eventBindEl = null
+    this._eventBindElRect = null
   }
 
   // 规范化配置  
@@ -182,7 +183,7 @@
       loading: options.loading || DEFAULT_URL,
       error: options.error || DEFAULT_URL,
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
-      preLoad: options.preLoad || 1.1,
+      preLoad: options.preLoad || 1.3,
       delay: options.delay,
       observer: utils.isUndef(options.observer) ? true : options.observer
     }
@@ -210,8 +211,7 @@
         !img.src &&
         utils.getDataSrc(img, 'src')
       ) {
-        var listener = new ImageListener(img, _this.options)
-        listener._sources = _this.imageListeners
+        var listener = new ImageListener(img, _this.options, _this)
         _this.imageListeners.push(listener)
 
         var imgId = ++cid
@@ -233,11 +233,12 @@
 
   Load.prototype._initIntersectionObserver = function () {
     var _this = this
-    _this._observer = new IntersectionObserver(_this._observerHandler.bind(_this))
+    _this._observer = new IntersectionObserver(_this._observerHandler.bind(_this), {
+      rootMargin: window.innerHeight * (_this.options.preLoad - 1) + 'px' + ' ' + window.innerWidth *  (_this.options.preLoad - 1) + 'px'
+    })
 
     utils.forEach(_this.imageListeners, function (imageListener) {
       _this._observer.observe(imageListener.el)
-      imageListener._observer = _this._observer
     })
   }
 
@@ -266,6 +267,7 @@
     })
 
     _this._eventBindEl = scrollEl
+    _this._eventBindElRect = scrollEl instanceof HTMLElement ? scrollEl.getBoundingClientRect() : document.body.getBoundingClientRect()
     _this.lazyloadHandler()
   }
 
@@ -292,18 +294,14 @@
   }
   
 
-  var ImageListener = function (img, options) {
+  var ImageListener = function (img, options, loadInstance) {
     this.el = img
     this.src = utils.getDataSrc(img, 'src')
     this.options = options
     this.rect = null
     this.loading = false
     this.loaded = false
-
-    // 存放来源的监听数组，用于从数组中移除自身。
-    this._sources = null
-    // 存放来源的_observer实例
-    this._observer = null
+    this.loadInstance = loadInstance
   }
 
   ImageListener.prototype.render = function (state, src) {
@@ -344,14 +342,16 @@
     var _this = this
     _this.loading = false
     _this.loaded = true
-    var sources = _this._sources
+    
+    var sources = _this.loadInstance.imageListeners
+
     var index = utils.findIndex(sources, function (listener) {
       return utils.getDataSrc(listener.el, 'id') === utils.getDataSrc(_this.el, 'id')
     })
     sources.splice(index, 1)
 
-    if (_this._observer) {
-      _this._observer.unobserve(_this.el)
+    if (_this.loadInstance._observer) {
+      _this.loadInstance._observer.unobserve(_this.el)
     }
   }
 
