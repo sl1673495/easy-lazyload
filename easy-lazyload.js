@@ -198,7 +198,9 @@
   Load.prototype._observerHandler = function (entries, observer) {
     var _this = this
     utils.forEach(entries, function (entry) {
-      if (entry.isIntersecting) {
+      // fixed: 低版本安卓浏览器没有isIntersecting属性
+      var isEnter = entry.isIntersecting == null ? entry.intersectionRatio : entry.isIntersecting
+      if (isEnter) {
         var img = entry.target
         var imgId = utils.getDataSrc(img, 'id')
         var listener = _this.imageListenersMap[imgId]
