@@ -13,12 +13,25 @@
     }
 
     .introduce {
-      padding: 25px 0;
+      padding: 10px 0;
       text-align: center;
     }
 
     .img-wrap {
+      display: none;
       font-size: 0;
+    }
+
+    .pre-loading {
+      text-align: center;
+    }
+
+    .loading {
+      padding: 10px;
+      text-align: center;
+      font-weight: 700;
+      font-size: 14px;
+      color: #999
     }
 
     img {
@@ -65,9 +78,36 @@
   <script>
     var loader = new EasyLazyLoad('.img-wrap', {
       delay: 1000,
+      preLoad: 1,
       loading: LOADING_URL,
-      preLoad: 1
+      onPreLoad: function () {
+        document.querySelector('.img-wrap').style.display = 'block'
+        setTimeout(() => {
+          var loading = document.createElement('div')
+          loading.classList.add('loading')
+          loading.innerText = '正在加载中...'
+          document.querySelector('.content').appendChild(loading)
+          initLoading()
+        }, 0);
+      }
     })
+
+    function initLoading() {
+      var images = ['./assets/images/timg1.jpeg', './assets/images/timg2.jpeg', './assets/images/timg3.jpeg', './assets/images/timg4.jpeg']
+      var loadMore = new EasyLazyLoad('.loading', {
+        onLoadMore: function (done) {
+          setTimeout(function() {
+            for (var i = 0; i < 8; i++) {
+              var img = document.createElement('img')
+              img.dataset.src = images[i % 4]
+              document.querySelector('.img-wrap').appendChild(img)
+            }
+            loader.refresh()
+            done()
+          }, 1500);
+        }
+      })
+    }
   </script>
 </body>
 
