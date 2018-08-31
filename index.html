@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,23 +10,20 @@
     .img-wrap {
       font-size: 0;
     }
+
     img {
       box-sizing: border-box;
       padding: 5px;
       display: inline-block;
       width: 50%;
       height: 350px;
-      border:0;
+      border: 0;
     }
   </style>
 </head>
+
 <body>
   <div class="img-wrap">
-    <img data-src="./assets/images/timg1.jpeg"/>
-    <img data-src="./assets/images/timg2.jpeg" />
-    <img data-src="./assets/images/timg3.jpeg" />
-    <img data-src="./assets/images/timg4.jpeg" />
-    <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" />
     <img data-src="./assets/images/timg1.jpeg" />
     <img data-src="./assets/images/timg2.jpeg" />
     <img data-src="./assets/images/timg3.jpeg" />
@@ -41,7 +39,12 @@
     <img data-src="./assets/images/timg3.jpeg" />
     <img data-src="./assets/images/timg4.jpeg" />
     <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" />
-   </div>
+    <img data-src="./assets/images/timg1.jpeg" />
+    <img data-src="./assets/images/timg2.jpeg" />
+    <img data-src="./assets/images/timg3.jpeg" />
+    <img data-src="./assets/images/timg4.jpeg" />
+    <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" />
+  </div>
   <script src="./easy-lazyload.js"></script>
   <script>
     var loader = new EasyLazyLoad('.img-wrap', {
@@ -49,4 +52,5 @@
     })
   </script>
 </body>
+
 </html>

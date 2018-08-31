@@ -4,7 +4,13 @@
 
 #### 使用说明
 ```
- var loader = new EasyLazyLoad('.img-wrap', {
+  <div class="img-wrap">
+    <img data-src="./assets/images/timg1.jpeg" />
+    <img data-src="./assets/images/timg2.jpeg" />
+    <img data-src="./assets/images/timg3.jpeg" />
+  </div>
+
+  var loader = new EasyLazyLoad('.img-wrap', {
       throttleWait: 100, // 监听事件触发频率
       loading, // 加载图片url
       error, // 加载失败图片url
