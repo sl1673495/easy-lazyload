@@ -20,9 +20,12 @@
       throttleWait: 100, // 监听事件触发频率
       listenEvents, // 需要监听的事件 默认为'scroll', 'wheel', 'mousewheel', 'resize', 'animationend', 'transitionend', 'touchmove'
  })
+ 
+```
 
- 此外也可以作为瀑布流插件使用。
- .loading作为列表底部的加载提示，比如一行'正在加载'的文字，和懒加载的逻辑一样，在合适的时机触发回调即可完成无限加载的效果。
+#### 作为瀑布流插件使用
+```
+.loading作为列表底部的加载提示，比如一行'正在加载'的文字，和懒加载的逻辑一样，在合适的时机触发回调即可完成无限加载的效果。
 
   var loadMore = new EasyLazyLoad('.loading', {
       // 只要传入onLoadMore参数就会作为瀑布流插件加载
