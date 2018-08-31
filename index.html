@@ -45,10 +45,12 @@
     <img data-src="./assets/images/timg4.jpeg" />
     <img data-src="https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=1164450919,910798435&fm=26&gp=0.jpg" />
   </div>
+  <script src='./assets/images/loading.js'></script>
   <script src="./easy-lazyload.js"></script>
   <script>
     var loader = new EasyLazyLoad('.img-wrap', {
-      delay: 1000
+      delay: 1000,
+      loading: LOADING_URL
     })
   </script>
 </body>
