@@ -18,7 +18,7 @@
       var nativeEach = Array.prototype.forEach
       if (nativeEach) {
         return nativeEach.call(arr, fn)
-      }else {
+      } else {
         for (var i = 0; i < arr.length; i++) {
           fn(arr[i], i)
         }
@@ -114,7 +114,23 @@
       }
       return i
     },
-    isUndef: function(val) {
+    addEvent: function (node, event, fn) {
+      if (typeof node.addEventListener == 'function') {
+        node.addEventListener(event, fn);
+      }
+      else if (typeof node.attachEvent == 'function') {
+        node.attachEvent('on' + event, fn);
+      }
+    },
+    removeEvent: function (node, event, fn) {
+      if (typeof node.removeEventListener == 'function') {
+        node.removeEventListener(event, fn);
+      }
+      else if (typeof node.detatchEvent == 'function') {
+        node.detatchEvent('on' + event, fn);
+      }
+    },
+    isUndef: function (val) {
       return val === null || val === undefined
     }
   }
@@ -124,6 +140,7 @@
     this.imageListeners = []
     this.imageListenersMap = {}
     this.lazyloadHandler = null
+    this._eventBindEl = null
 
     options = options || {}
     this.options = {
@@ -133,7 +150,7 @@
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
       preLoad: options.preLoad || 1.1,
       delay: options.delay,
-      observer: utils.isUndef(options.observer)? true : options.observer
+      observer: utils.isUndef(options.observer) ? true : options.observer
     }
 
     this.init()
@@ -144,19 +161,19 @@
     this._initEvents()
   }
 
-  Load.prototype.destroy = function() {
+  Load.prototype.destroy = function () {
     var _this = this
     if (_this._observer) {
       _this._observer.disconnect()
-    }else {
-      utils.forEach(DEFAULT_EVENTS, function(eventName) {
-        _this._eventBindEl.removeEventListener(eventName, _this.lazyloadHandler)
+    } else {
+      utils.forEach(DEFAULT_EVENTS, function (eventName) {
+        utils.removeEvent(_this._eventBindEl, eventName, _this.lazyloadHandler)
       })
     }
   }
 
-  Load.prototype.refresh = function() {
-    this._destory()
+  Load.prototype.refresh = function () {
+    this.destroy()
     this.init()
   }
 
@@ -220,8 +237,8 @@
     _this.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
 
     var scrollEl = utils.scrollParent(_this.el)
-    utils.forEach(DEFAULT_EVENTS, function(eventName) {
-      scrollEl.addEventListener(eventName, _this.lazyloadHandler)
+    utils.forEach(DEFAULT_EVENTS, function (eventName) {
+      utils.addEvent(scrollEl, eventName, _this.lazyloadHandler)
     })
 
     _this._eventBindEl = scrollEl
@@ -269,10 +286,10 @@
 
         var delay = _this.options.delay
         if (delay) {
-          setTimeout(function() {
+          setTimeout(function () {
             _this.render('success', src)
           }, delay);
-        }else {
+        } else {
           _this.render('success', src)
         }
         _this.finishLoading()
