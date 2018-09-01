@@ -88,8 +88,10 @@
     resize()
     initLoader()
 
+    var loader
+
     function initLoader() {
-      var loader = new EasyLazyLoad('.img-wrap', {
+      loader = new EasyLazyLoad('.img-wrap', {
       delay: 500,
       preLoad: 1,
       loading: LOADING_URL,
