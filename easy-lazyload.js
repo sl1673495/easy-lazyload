@@ -184,7 +184,6 @@
       throttleWait: options.throttleWait || 100,
       listenEvents: options.listenEvents || DEFAULT_EVENTS,
       preLoad: options.preLoad || 1.3,
-      delay: options.delay,
       observer: utils.isUndef(options.observer) ? true : options.observer,
       onPreLoad: options.onPreLoad || utils.noop,
       beforeMount: options.beforeMount,
@@ -374,13 +373,12 @@
           ctx.loadInstance.options.beforeMount && ctx.loadInstance._callHook('beforeMount', ctx.el)
 
           var src = result.src
-          var delay = ctx.options.delay
-          if (delay ||  ctx.loadInstance.options.mounted) {
+          if ( ctx.loadInstance.options.mounted) {
             // 如果用户定义了mounted生命周期， 有可能要进行一些dom操作触发动画， 必须把render放在下一个事件周期里执行，防止被浏览器引擎优化多次dom修改成同一次。
             setTimeout(function () {
               ctx.render('success', src)
               ctx.loadInstance._callHook('mounted', ctx.el)          
-            }, delay || 17);
+            }, 17);
           } else {
             ctx.render('success', src)
           }

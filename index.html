@@ -92,11 +92,10 @@
 
     function initLoader() {
       loader = new EasyLazyLoad('.img-wrap', {
-      // delay: 500,
       preLoad: 1,
       loading: LOADING_URL,
       onPreLoad: function () {
-        setTimeout(() => {
+        setTimeout(function(){
           var loading = document.createElement('div')
           loading.classList.add('loading')
           loading.innerText = '正在加载中...'
@@ -108,7 +107,7 @@
         img.style.opacity = 0
       },
       mounted: function(img) {
-        img.style.transition = 'all .5s'         
+        img.style.transition = 'all .8s'         
         img.style.opacity = 1
       }
     })
