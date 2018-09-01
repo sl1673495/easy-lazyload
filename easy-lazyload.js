@@ -40,14 +40,14 @@
         }
       }
     },
-    getDataSrc: function (el, attr) {
+    getDataSet: function (el, attr) {
       if ('dataset' in el) {
         return el.dataset[attr]
       } else {
         return el.getAttribute('data-' + attr)
       }
     },
-    setDataSrc: function (el, attr, value) {
+    setDataSet: function (el, attr, value) {
       if ('dataset' in el) {
         el.dataset[attr] = value
       } else {
@@ -237,7 +237,7 @@
     var targetArr = utils.arrayFrom(targets)
     utils.forEach(targetArr, function (target) {
       if (
-        utils.getDataSrc(target, 'src') && !ctx.imageListenersMap[utils.getDataSrc(target, 'id')] ||
+        (utils.getDataSet(target, 'src') && !ctx.imageListenersMap[utils.getDataSet(target, 'id')]) ||
         ctx.loadMoreMode
       ) {
         var listener = new ImageListener(target, ctx.options, ctx)
@@ -247,7 +247,7 @@
         }
 
         var targetId = ++cid
-        utils.setDataSrc(target, 'id', targetId)
+        utils.setDataSet(target, 'id', targetId)
 
         ctx.imageListeners.push(listener)
         ctx.imageListenersMap[targetId] = listener
@@ -283,7 +283,7 @@
       var isEnter = utils.isUndef(entry.isIntersecting) ? entry.intersectionRatio : entry.isIntersecting
       if (isEnter) {
         var img = entry.target
-        var imgId = utils.getDataSrc(img, 'id')
+        var imgId = utils.getDataSet(img, 'id')
         var listener = ctx.imageListenersMap[imgId]
         listener.load()
       }
@@ -341,7 +341,7 @@
 
   var ImageListener = function (img, options, loadInstance) {
     this.el = img
-    this.src = utils.getDataSrc(img, 'src')
+    this.src = utils.getDataSet(img, 'src')
     this.options = options
     this.rect = null
     this.loading = false
@@ -379,7 +379,7 @@
           } else {
             ctx.render('success', src)
           }
-          
+
           ctx.finishLoading()
         },
         function onError() {
@@ -397,7 +397,7 @@
 
     var sources = ctx.loadInstance.imageListeners
     var index = utils.findIndex(sources, function (listener) {
-      return utils.getDataSrc(listener.el, 'id') === utils.getDataSrc(ctx.el, 'id')
+      return utils.getDataSet(listener.el, 'id') === utils.getDataSet(ctx.el, 'id')
     })
     sources.splice(index, 1)
 
