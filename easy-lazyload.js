@@ -264,14 +264,11 @@
   // 加载事件
   Load.prototype._initEvents = function () {
     // 优先采用IntersectionObserver
-
-    this._initNormalEvents()
-    
-    // if (hasIntersectionObserver && this.options.observer) {
-    //   this._initIntersectionObserver()
-    // } else {
-    //   this._initNormalEvents()
-    // }
+    if (hasIntersectionObserver && this.options.observer) {
+      this._initIntersectionObserver()
+    } else {
+      this._initNormalEvents()
+    }
   }
 
   Load.prototype._initIntersectionObserver = function () {
