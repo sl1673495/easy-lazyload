@@ -347,7 +347,6 @@
     this.loading = false
     this.loaded = false
     this.loadInstance = loadInstance
-    this.loadMoreMode = loadInstance.loadMoreMode
   }
 
   ImageListener.prototype.render = function (state, src) {
@@ -361,7 +360,7 @@
     if (ctx.loading || ctx.loaded) return
     ctx.loading = true
 
-    if (this.loadMoreMode) {
+    if (ctx.loadInstance.loadMoreMode) {
       var done = function () {
         ctx.loading = false
       }
