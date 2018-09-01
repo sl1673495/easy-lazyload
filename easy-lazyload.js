@@ -193,13 +193,13 @@
 
   // 初始化属性
   Load.prototype._initProperties = function (el, options) {
-    this.loadMoreMode = !utils.isUndef(this.options.onLoadMore)    
+    this.loadMoreMode = !utils.isUndef(this.options.onLoadMore)
     this.el = document.querySelector(el)
-  
+
     if (!this.el) {
       if (this.loadMoreMode) {
         throw new Error('loadMore should bind a mounted dom')
-      }else {
+      } else {
         this.el = document.body
       }
     }
@@ -216,49 +216,43 @@
   Load.prototype._preLoad = function () {
     if (this.loadMoreMode) return
 
-    var _this = this
-    var loading = _this.options.loading
-    var error = _this.options.error
+    var ctx = this
+    var loading = ctx.options.loading
+    var error = ctx.options.error
 
     utils.loadImageAsync(loading, function () {
-      _this._callHook('onPreLoad')
+      ctx._callHook('onPreLoad')
     })
     utils.loadImageAsync(error)
   }
 
   // 加载图片监听类
   Load.prototype._initImageListeners = function () {
-    var _this = this
+    var ctx = this
     var targets = this.loadMoreMode
-      ? [_this.el]
-      : _this.el.querySelectorAll('img')
+      ? [ctx.el]
+      : ctx.el.querySelectorAll('img')
     if (!targets || !targets.length) return
 
     var targetArr = utils.arrayFrom(targets)
     utils.forEach(targetArr, function (target) {
       if (
-        (
-          utils.getDataSrc(target, 'src') &&
-          !_this.imageListenersMap[utils.getDataSrc(target, 'id')]
-        ) ||
-        _this.loadMoreMode
+        utils.getDataSrc(target, 'src') && !ctx.imageListenersMap[utils.getDataSrc(target, 'id')] ||
+        ctx.loadMoreMode
       ) {
-        _this._addTarget(target)
+        var listener = new ImageListener(target, ctx.options, ctx)
+
+        if (!ctx.loadMoreMode) {
+          listener.render('loading')
+        }
+
+        var targetId = ++cid
+        utils.setDataSrc(target, 'id', targetId)
+
+        ctx.imageListeners.push(listener)
+        ctx.imageListenersMap[targetId] = listener
       }
     })
-  }
-
-  Load.prototype._addTarget = function (target) {
-    var _this = this
-    var listener = new ImageListener(target, _this.options, _this)
-    _this.imageListeners.push(listener)
-    if (!_this.loadMoreMode) {
-      listener.render('loading')
-    }
-
-    var imgId = ++cid
-    utils.setDataSrc(target, 'id', imgId)
-    _this.imageListenersMap[imgId] = listener
   }
 
   // 加载事件
@@ -272,25 +266,25 @@
   }
 
   Load.prototype._initIntersectionObserver = function () {
-    var _this = this
-    _this._observer = new IntersectionObserver(_this._observerHandler.bind(_this), {
-      rootMargin: window.innerHeight * (_this.options.preLoad - 1) + 'px' + ' ' + window.innerWidth * (_this.options.preLoad - 1) + 'px'
+    var ctx = this
+    ctx._observer = new IntersectionObserver(ctx._observerHandler.bind(ctx), {
+      rootMargin: window.innerHeight * (ctx.options.preLoad - 1) + 'px' + ' ' + window.innerWidth * (ctx.options.preLoad - 1) + 'px'
     })
 
-    utils.forEach(_this.imageListeners, function (imageListener) {
-      _this._observer.observe(imageListener.el)
+    utils.forEach(ctx.imageListeners, function (imageListener) {
+      ctx._observer.observe(imageListener.el)
     })
   }
 
   Load.prototype._observerHandler = function (entries, observer) {
-    var _this = this
+    var ctx = this
     utils.forEach(entries, function (entry) {
       // fixed: 低版本安卓浏览器没有isIntersecting属性
       var isEnter = utils.isUndef(entry.isIntersecting) ? entry.intersectionRatio : entry.isIntersecting
       if (isEnter) {
         var img = entry.target
         var imgId = utils.getDataSrc(img, 'id')
-        var listener = _this.imageListenersMap[imgId]
+        var listener = ctx.imageListenersMap[imgId]
         listener.load()
       }
     })
@@ -298,24 +292,24 @@
 
   // 降级方案, 监听事件去判断图片是否进入视口
   Load.prototype._initNormalEvents = function () {
-    var _this = this
-    _this.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
+    var ctx = this
+    ctx.lazyloadHandler = utils.throttle(this._lazyloadHandler.bind(this), this.options.throttleWait)
 
-    var scrollEl = utils.scrollParent(_this.el)
+    var scrollEl = utils.scrollParent(ctx.el)
     utils.forEach(DEFAULT_EVENTS, function (eventName) {
-      utils.addEvent(scrollEl, eventName, _this.lazyloadHandler)
+      utils.addEvent(scrollEl, eventName, ctx.lazyloadHandler)
     })
 
-    _this._eventBindEl = scrollEl
-    _this._eventBindElRect = utils.isHTMLElement(scrollEl) ? scrollEl.getBoundingClientRect() : document.body.getBoundingClientRect()
-    setTimeout(function() {
-      _this.lazyloadHandler()
+    ctx._eventBindEl = scrollEl
+    ctx._eventBindElRect = utils.isHTMLElement(scrollEl) ? scrollEl.getBoundingClientRect() : document.body.getBoundingClientRect()
+    setTimeout(function () {
+      ctx.lazyloadHandler()
     }, 0);
   }
 
   Load.prototype._lazyloadHandler = function () {
-    var _this = this
-    utils.forEach(_this.imageListeners, function (image) {
+    var ctx = this
+    utils.forEach(ctx.imageListeners, function (image) {
       if (image.checkInView()) {
         image.load()
       }
@@ -329,12 +323,12 @@
 
   // api 用于dom移除后删除事件监听
   Load.prototype.destroy = function () {
-    var _this = this
-    if (_this._observer) {
-      _this._observer.disconnect()
+    var ctx = this
+    if (ctx._observer) {
+      ctx._observer.disconnect()
     } else {
       utils.forEach(DEFAULT_EVENTS, function (eventName) {
-        utils.removeEvent(_this._eventBindEl, eventName, _this.lazyloadHandler)
+        utils.removeEvent(ctx._eventBindEl, eventName, ctx.lazyloadHandler)
       })
     }
   }
@@ -362,53 +356,54 @@
   }
 
   ImageListener.prototype.load = function () {
-    var _this = this
+    var ctx = this
 
-    if (_this.loading || _this.loaded) return
-    _this.loading = true
+    if (ctx.loading || ctx.loaded) return
+    ctx.loading = true
+
     if (this.loadMoreMode) {
       var done = function () {
-        _this.loading = false
+        ctx.loading = false
       }
-      _this.loadInstance.options.onLoadMore(done)
+      ctx.loadInstance.options.onLoadMore(done)
     } else {
       utils.loadImageAsync(
         this.src,
         function onSuccess(result) {
           var src = result.src
 
-          var delay = _this.options.delay
+          var delay = ctx.options.delay
           if (delay) {
             setTimeout(function () {
-              _this.render('success', src)
+              ctx.render('success', src)
             }, delay);
           } else {
-            _this.render('success', src)
+            ctx.render('success', src)
           }
-          _this.finishLoading()
+          
+          ctx.finishLoading()
         },
         function onError() {
-          _this.render('error')
-          _this.finishLoading()
+          ctx.render('error')
+          ctx.finishLoading()
         }
       )
     }
   }
 
   ImageListener.prototype.finishLoading = function () {
-    var _this = this
-    _this.loading = false
-    _this.loaded = true
+    var ctx = this
+    ctx.loading = false
+    ctx.loaded = true
 
-    var sources = _this.loadInstance.imageListeners
-
+    var sources = ctx.loadInstance.imageListeners
     var index = utils.findIndex(sources, function (listener) {
-      return utils.getDataSrc(listener.el, 'id') === utils.getDataSrc(_this.el, 'id')
+      return utils.getDataSrc(listener.el, 'id') === utils.getDataSrc(ctx.el, 'id')
     })
     sources.splice(index, 1)
 
-    if (_this.loadInstance._observer) {
-      _this.loadInstance._observer.unobserve(_this.el)
+    if (ctx.loadInstance._observer) {
+      ctx.loadInstance._observer.unobserve(ctx.el)
     }
   }
 
