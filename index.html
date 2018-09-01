@@ -124,10 +124,10 @@
 
     function resize() {
       if (window.innerWidth > 500) {
-        var imgHeight = window.innerHeight
         var imgArr = [].slice.call(document.querySelectorAll('img'))
+        var imgWidth =imgArr[0].clientWidth
         for (var i = 0; i < imgArr.length; i++) {
-          imgArr[i].style.height = imgHeight + 'px';
+          imgArr[i].style.height = imgWidth * 2 + 'px';
         }
       }
     }

@@ -264,11 +264,14 @@
   // 加载事件
   Load.prototype._initEvents = function () {
     // 优先采用IntersectionObserver
-    if (hasIntersectionObserver && this.options.observer) {
-      this._initIntersectionObserver()
-    } else {
-      this._initNormalEvents()
-    }
+
+    this._initNormalEvents()
+    
+    // if (hasIntersectionObserver && this.options.observer) {
+    //   this._initIntersectionObserver()
+    // } else {
+    //   this._initNormalEvents()
+    // }
   }
 
   Load.prototype._initIntersectionObserver = function () {
@@ -308,13 +311,14 @@
 
     _this._eventBindEl = scrollEl
     _this._eventBindElRect = utils.isHTMLElement(scrollEl) ? scrollEl.getBoundingClientRect() : document.body.getBoundingClientRect()
-    _this.lazyloadHandler()
+    setTimeout(function() {
+      _this.lazyloadHandler()
+    }, 0);
   }
 
   Load.prototype._lazyloadHandler = function () {
     var _this = this
     utils.forEach(_this.imageListeners, function (image) {
-      // 如果有_observer属性说明是observer触发的事件 直接load
       if (image.checkInView()) {
         image.load()
       }
