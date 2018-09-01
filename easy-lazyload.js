@@ -187,6 +187,8 @@
       delay: options.delay,
       observer: utils.isUndef(options.observer) ? true : options.observer,
       onPreLoad: options.onPreLoad || utils.noop,
+      beforeMount: options.beforeMount || utils.noop,
+      mounted: options.mounted || utils.noop,
       onLoadMore: options.onLoadMore,
     }
   }
@@ -232,6 +234,7 @@
     var targets = this.loadMoreMode
       ? [ctx.el]
       : ctx.el.querySelectorAll('img')
+
     if (!targets || !targets.length) return
 
     var targetArr = utils.arrayFrom(targets)
@@ -318,7 +321,21 @@
 
   Load.prototype._callHook = function (hook) {
     var hookCallback = this.options[hook]
-    hookCallback()
+    var argumentsArr = utils.arrayFrom(arguments)
+
+    var callback = function () {
+      hookCallback.apply(null, argumentsArr.slice(1))
+    }
+
+    switch (hook) {
+      case 'mounted':
+        setTimeout(function () {
+          callback()
+        }, 0)
+        return
+      default:
+        callback()
+    }
   }
 
   // api 用于dom移除后删除事件监听
@@ -369,15 +386,18 @@
       utils.loadImageAsync(
         this.src,
         function onSuccess(result) {
+          ctx.loadInstance._callHook('beforeMount', ctx.el)
           var src = result.src
 
           var delay = ctx.options.delay
           if (delay) {
             setTimeout(function () {
               ctx.render('success', src)
+              ctx.loadInstance._callHook('mounted', ctx.el)
             }, delay);
           } else {
             ctx.render('success', src)
+            ctx.loadInstance._callHook('mounted', ctx.el)
           }
 
           ctx.finishLoading()

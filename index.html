@@ -103,6 +103,13 @@
           document.querySelector('.content').appendChild(loading)
           initLoading()
         }, 0);
+      },
+      beforeMount: function(img) {
+        img.style.opacity = 0
+        img.style.transition = 'all .5s'
+      },
+      mounted: function(img) {
+        img.style.opacity = 1
       }
     })
     }
