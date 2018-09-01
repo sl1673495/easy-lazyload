@@ -305,9 +305,7 @@
 
     ctx._eventBindEl = scrollEl
     ctx._eventBindElRect = utils.isHTMLElement(scrollEl) ? scrollEl.getBoundingClientRect() : document.body.getBoundingClientRect()
-    setTimeout(function () {
-      ctx.lazyloadHandler()
-    }, 0);
+    ctx.lazyloadHandler()
   }
 
   Load.prototype._lazyloadHandler = function () {
