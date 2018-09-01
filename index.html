@@ -85,6 +85,18 @@
   <script src='./assets/images/loading.js'></script>
   <script src="./easy-lazyload.js"></script>
   <script>
+    var resize = function() {
+      if (window.innerWidth > 500) {
+        var imgHeight = window.innerHeight
+        var imgArr = [].slice.call(document.querySelectorAll('img'))
+        for (var i = 0; i < imgArr.length; i++) {
+          imgArr[i].style.height = imgHeight + 'px';
+        }
+      }
+    }
+
+    resize()
+
     var loader = new EasyLazyLoad('.img-wrap', {
       delay: 1000,
       preLoad: 1,
@@ -111,6 +123,7 @@
               img.dataset.src = images[i % 4]
               document.querySelector('.img-wrap').appendChild(img)
             }
+            resize()            
             loader.refresh()
             done()
           }, 1500);
