@@ -28,7 +28,6 @@
     }
 
     .img-wrap {
-      display: none;
       font-size: 0;
     }
 
@@ -87,13 +86,14 @@
   <script>
     
     resize()
+    initLoader()
 
-    var loader = new EasyLazyLoad('.img-wrap', {
+    function initLoader() {
+      var loader = new EasyLazyLoad('.img-wrap', {
       delay: 500,
       preLoad: 1,
       loading: LOADING_URL,
       onPreLoad: function () {
-        document.querySelector('.img-wrap').style.display = 'block'
         setTimeout(() => {
           var loading = document.createElement('div')
           loading.classList.add('loading')
@@ -103,6 +103,7 @@
         }, 0);
       }
     })
+    }
 
     function initLoading() {
       var images = ['./assets/images/timg1.jpeg', './assets/images/timg2.jpeg', './assets/images/timg3.jpeg', './assets/images/timg4.jpeg']
