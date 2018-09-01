@@ -95,13 +95,11 @@
       image.src = src
 
       image.onload = function () {
-        setTimeout(() => {
-          onSuccess({
-            naturalHeight: image.naturalHeight,
-            naturalWidth: image.naturalWidth,
-            src: image.src
-          })
-        }, 500);
+        onSuccess({
+          naturalHeight: image.naturalHeight,
+          naturalWidth: image.naturalWidth,
+          src: image.src
+        })
       }
 
       image.onerror = function (e) {
