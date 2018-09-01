@@ -95,11 +95,13 @@
       image.src = src
 
       image.onload = function () {
-        onSuccess({
-          naturalHeight: image.naturalHeight,
-          naturalWidth: image.naturalWidth,
-          src: image.src
-        })
+        setTimeout(() => {
+          onSuccess({
+            naturalHeight: image.naturalHeight,
+            naturalWidth: image.naturalWidth,
+            src: image.src
+          })
+        }, 500);
       }
 
       image.onerror = function (e) {
@@ -187,8 +189,8 @@
       delay: options.delay,
       observer: utils.isUndef(options.observer) ? true : options.observer,
       onPreLoad: options.onPreLoad || utils.noop,
-      beforeMount: options.beforeMount || utils.noop,
-      mounted: options.mounted || utils.noop,
+      beforeMount: options.beforeMount,
+      mounted: options.mounted,
       onLoadMore: options.onLoadMore,
     }
   }
@@ -322,20 +324,7 @@
   Load.prototype._callHook = function (hook) {
     var hookCallback = this.options[hook]
     var argumentsArr = utils.arrayFrom(arguments)
-
-    var callback = function () {
-      hookCallback.apply(null, argumentsArr.slice(1))
-    }
-
-    switch (hook) {
-      case 'mounted':
-        setTimeout(function () {
-          callback()
-        }, 0)
-        return
-      default:
-        callback()
-    }
+    hookCallback.apply(null, argumentsArr.slice(1))
   }
 
   // api 用于dom移除后删除事件监听
@@ -386,18 +375,18 @@
       utils.loadImageAsync(
         this.src,
         function onSuccess(result) {
-          ctx.loadInstance._callHook('beforeMount', ctx.el)
-          var src = result.src
+          ctx.loadInstance.options.beforeMount && ctx.loadInstance._callHook('beforeMount', ctx.el)
 
+          var src = result.src
           var delay = ctx.options.delay
-          if (delay) {
+          if (delay ||  ctx.loadInstance.options.mounted) {
+            // 如果用户定义了mounted生命周期， 有可能要进行一些dom操作触发动画， 必须把render放在下一个事件周期里执行，防止被浏览器引擎优化多次dom修改成同一次。
             setTimeout(function () {
               ctx.render('success', src)
-              ctx.loadInstance._callHook('mounted', ctx.el)
-            }, delay);
+              ctx.loadInstance._callHook('mounted', ctx.el)          
+            }, delay || 17);
           } else {
             ctx.render('success', src)
-            ctx.loadInstance._callHook('mounted', ctx.el)
           }
 
           ctx.finishLoading()

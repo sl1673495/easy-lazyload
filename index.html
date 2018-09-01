@@ -92,7 +92,7 @@
 
     function initLoader() {
       loader = new EasyLazyLoad('.img-wrap', {
-      delay: 500,
+      // delay: 500,
       preLoad: 1,
       loading: LOADING_URL,
       onPreLoad: function () {
@@ -106,9 +106,9 @@
       },
       beforeMount: function(img) {
         img.style.opacity = 0
-        img.style.transition = 'all .5s'
       },
       mounted: function(img) {
+        img.style.transition = 'all .5s'         
         img.style.opacity = 1
       }
     })
