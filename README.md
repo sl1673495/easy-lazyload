@@ -10,17 +10,25 @@
     <img data-src="./assets/images/timg3.jpeg" />
   </div>
 
+  最简单的用法： var loader = new EasyLazyLoad() 会将body作为滚动容器并找body下所有有data-src属性的img作为懒加载对象。
+
+  如果需要确定一个容器内部的img需要懒加载：var loader = new EasyLazyLoad('.img-wrap')
+
+  详细api：
   var loader = new EasyLazyLoad('.img-wrap', {
       loading, // 加载图片url
       error, // 加载失败图片url
-      preLoad: 1.3, // 预加载时机 如1.3则提前30%的视口高度就加载， 演示设为1是为了更好的展示效果
-      observer: true // 是否使用 IntersectionObserver api来监听图片是否进入视口 默认为true 性能更好 如果浏览器不兼容则降级为事件监听
-      delay: 1000, // 延迟加载 演示专用
-      // 下面的事件启用observer时无效
+      preLoad: 默认为1.3, // 预加载时机 如1.3则提前30%的视口高度就加载， 演示设为1是为了更好的展示效果
+      observer: 默认为true // 是否使用 IntersectionObserver api来监听图片是否进入视口 默认为true 性能更好 如果浏览器不兼容则降级为事件监听
+
+      // 下面的选项启用observer时无效
       throttleWait: 100, // 监听事件触发频率
       listenEvents, // 需要监听的事件 默认为'scroll', 'wheel', 'mousewheel', 'resize', 'animationend', 'transitionend', 'touchmove'
  })
- 
+
+ 实例方法 
+ loader.refresh()： 用于新增图片节点后对这些图片进行监听。
+ loader.destory(): 移除一个实例的所有事件监听。
 ```
 
 #### 作为瀑布流插件使用
@@ -30,8 +38,10 @@
   var loadMore = new EasyLazyLoad('.loading', {
       // 只要传入onLoadMore参数就会作为瀑布流插件加载
       onLoadMore: function (done) {
-        ... 任何插入图片的逻辑，可以是同步也可以是异步, 异步的话注意done的调用时机
-        
+        ... // 任何插入图片的逻辑，可以是同步也可以是异步, 异步的话注意done的调用时机
+
+        loader.refresh() // 监听新加入的图片节点
+
         done() 调用done方法， 通知loader可以开始下一次的监听，如果不调用则下次拉到loading的可视范围不会触发回调。        
       }    
  })
