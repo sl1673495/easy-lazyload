@@ -27,8 +27,8 @@
 
       // 生命周期
       onPreload: function() // 在loading图片预加载完成后调用， 可以防止用户看到一片空白的图片占位， 一般用不着。
-      beforeMount: function(img) // 在img替换真实url前调用，在这里可以做一些动画的初始化工作 如img.style.opacity = 0 img.style.transition = 'all .5s'
-      mounted: function(img) // 在img替换真实url后调用， 在这里可以做一些动画的结束值替换 如img.style.opacity = 1
+      beforeMount: function(img) // 在img替换真实url前调用，在这里可以做一些动画的初始化工作 如img.style.opacity = 0
+      mounted: function(img) // 在img替换真实url后调用， 在这里可以做一些动画的结束值替换 如img.style.opacity = 1; img.style.transition = 'all .5s';
  })
 
  实例方法 
