@@ -71,13 +71,8 @@
     var pageNum = 1
 
     appendSisters()
-    
-    // 根据分辨率适配图片大小
-    resize()
-
     // 初始化懒加载
     initLoader()
-
     // 初始化瀑布流
     setTimeout(function () {
       var loading = document.createElement('div')
@@ -125,7 +120,6 @@
         onLoadMore: function (done) {
           var hasMore = appendSisters()
           if (hasMore) {
-            resize()
             loader.refresh()
             done()
           }else {
