@@ -101,7 +101,7 @@
 
     function initLoader() {
       loader = new EasyLazyLoad('.img-wrap', {
-        preLoad: 1,
+        preLoad: 1.1,
         loading: LOADING_URL,
         error: LOADING_URL,
         beforeMount: function (img) {
@@ -128,17 +128,6 @@
         }
       })
     }
-
-    function resize() {
-      if (window.innerWidth > 500) {
-        var imgArr = [].slice.call(document.querySelectorAll('img'))
-        var imgWidth = imgArr[0].clientWidth
-        for (var i = 0; i < imgArr.length; i++) {
-          imgArr[i].style.height = imgWidth * 2 + 'px';
-        }
-      }
-    }
-
   </script>
 </body>
 
