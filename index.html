@@ -108,6 +108,7 @@
       loader = new EasyLazyLoad('.img-wrap', {
         preLoad: 1,
         loading: LOADING_URL,
+        error: LOADING_URL,
         beforeMount: function (img) {
           img.style.opacity = 0
         },
