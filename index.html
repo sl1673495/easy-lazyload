@@ -60,7 +60,7 @@
       easy-lazyload
     </h1>
     <p class="github">
-     <a href="https://github.com/sl1673495/easy-lazyload">github地址</a>
+      <a href="https://github.com/sl1673495/easy-lazyload">github地址</a>
     </p>
     <div class="img-wrap">
       <img data-src="./assets/images/timg1.jpeg" />
@@ -84,46 +84,45 @@
   <script src='./assets/images/loading.js'></script>
   <script src="./easy-lazyload.js"></script>
   <script>
-    
+
     resize()
     initLoader()
+
+    setTimeout(function () {
+      var loading = document.createElement('div')
+      loading.classList.add('loading')
+      loading.innerText = '正在加载中...'
+      document.querySelector('.content').appendChild(loading)
+      initLoadMore()
+    }, 0);
 
     var loader
 
     function initLoader() {
       loader = new EasyLazyLoad('.img-wrap', {
-      preLoad: 1,
-      loading: LOADING_URL,
-      onPreLoad: function () {
-        setTimeout(function(){
-          var loading = document.createElement('div')
-          loading.classList.add('loading')
-          loading.innerText = '正在加载中...'
-          document.querySelector('.content').appendChild(loading)
-          initLoading()
-        }, 0);
-      },
-      beforeMount: function(img) {
-        img.style.opacity = 0
-      },
-      mounted: function(img) {
-        img.style.transition = 'all .8s'         
-        img.style.opacity = 1
-      }
-    })
+        preLoad: 1,
+        loading: LOADING_URL,
+        beforeMount: function (img) {
+          img.style.opacity = 0
+        },
+        mounted: function (img) {
+          img.style.transition = 'all .8s'
+          img.style.opacity = 1
+        }
+      })
     }
 
-    function initLoading() {
+    function initLoadMore() {
       var images = ['./assets/images/timg1.jpeg', './assets/images/timg2.jpeg', './assets/images/timg3.jpeg', './assets/images/timg4.jpeg']
       var loadMore = new EasyLazyLoad('.loading', {
         onLoadMore: function (done) {
-          setTimeout(function() {
+          setTimeout(function () {
             for (var i = 0; i < 8; i++) {
               var img = document.createElement('img')
               img.dataset.src = images[i % 4] + '?id=' + Math.random()
               document.querySelector('.img-wrap').appendChild(img)
             }
-            resize()            
+            resize()
             loader.refresh()
             done()
           }, 500);
@@ -134,7 +133,7 @@
     function resize() {
       if (window.innerWidth > 500) {
         var imgArr = [].slice.call(document.querySelectorAll('img'))
-        var imgWidth =imgArr[0].clientWidth
+        var imgWidth = imgArr[0].clientWidth
         for (var i = 0; i < imgArr.length; i++) {
           imgArr[i].style.height = imgWidth * 2 + 'px';
         }
