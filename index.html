@@ -47,8 +47,7 @@
       box-sizing: border-box;
       padding: 5px;
       display: inline-block;
-      width: 50%;
-      height: 350px;
+      width: 100%;
       border: 0;
     }
   </style>
@@ -62,29 +61,17 @@
     <p class="github">
       <a href="https://github.com/sl1673495/easy-lazyload">github地址</a>
     </p>
-    <div class="img-wrap">
-      <img data-src="./assets/images/timg1.jpeg" />
-      <img data-src="./assets/images/timg2.jpeg" />
-      <img data-src="./assets/images/timg3.jpeg" />
-      <img data-src="./assets/images/timg4.jpeg" />
-      <img data-src="./assets/images/timg1.jpeg" />
-      <img data-src="./assets/images/timg2.jpeg" />
-      <img data-src="./assets/images/timg3.jpeg" />
-      <img data-src="./assets/images/timg4.jpeg" />
-      <img data-src="./assets/images/timg1.jpeg" />
-      <img data-src="./assets/images/timg2.jpeg" />
-      <img data-src="./assets/images/timg3.jpeg" />
-      <img data-src="./assets/images/timg4.jpeg" />
-      <img data-src="./assets/images/timg1.jpeg" />
-      <img data-src="./assets/images/timg2.jpeg" />
-      <img data-src="./assets/images/timg3.jpeg" />
-      <img data-src="./assets/images/timg4.jpeg" />
-    </div>
+    <div class="img-wrap"></div>
   </div>
+  <script src="./sisters.js"></script>
   <script src='./assets/images/loading.js'></script>
   <script src="./easy-lazyload.js"></script>
   <script>
 
+    var pageNum = 1
+
+    appendSisters()
+    
     // 根据分辨率适配图片大小
     resize()
 
@@ -99,6 +86,21 @@
       document.querySelector('.content').appendChild(loading)
       initLoadMore()
     }, 0);
+
+    function appendSisters() {
+      var sisters = getSisters(pageNum)
+      if (!sisters.length) {
+        return false
+      }
+      var warp = document.querySelector('.img-wrap')
+      for (var i = 0; i < sisters.length; i++) {
+        var img = document.createElement('img')
+        img.setAttribute('data-src', sisters[i])
+        warp.appendChild(img)
+      }
+      pageNum ++
+      return true
+    }
 
     var loader
 
@@ -120,16 +122,14 @@
       var images = ['./assets/images/timg1.jpeg', './assets/images/timg2.jpeg', './assets/images/timg3.jpeg', './assets/images/timg4.jpeg']
       var loadMore = new EasyLazyLoad('.loading', {
         onLoadMore: function (done) {
-          setTimeout(function () {
-            for (var i = 0; i < 8; i++) {
-              var img = document.createElement('img')
-              img.dataset.src = images[i % 4] + '?id=' + Math.random()
-              document.querySelector('.img-wrap').appendChild(img)
-            }
+          var hasMore = appendSisters()
+          if (hasMore) {
             resize()
             loader.refresh()
             done()
-          }, 500);
+          }else {
+            document.querySelector('.loading').innerText = '没有更多了'
+          }
         }
       })
     }
