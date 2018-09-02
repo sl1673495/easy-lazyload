@@ -120,7 +120,7 @@
           setTimeout(function() {
             for (var i = 0; i < 8; i++) {
               var img = document.createElement('img')
-              img.dataset.src = images[i % 4]
+              img.dataset.src = images[i % 4] + '?id=' + Math.random()
               document.querySelector('.img-wrap').appendChild(img)
             }
             resize()            
