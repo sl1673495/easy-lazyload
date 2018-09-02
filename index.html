@@ -6,8 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <meta name="referrer" content="no-referrer" />
-  
-  <title>Document</title>
+
+  <title>easy-lazyload</title>
   <style>
     * {
       margin: 0;
@@ -73,13 +73,8 @@
     var pageNum = 1
 
     appendSisters()
-    
-    // 根据分辨率适配图片大小
-    resize()
-
     // 初始化懒加载
     initLoader()
-
     // 初始化瀑布流
     setTimeout(function () {
       var loading = document.createElement('div')
@@ -108,8 +103,9 @@
 
     function initLoader() {
       loader = new EasyLazyLoad('.img-wrap', {
-        preLoad: 1,
+        preLoad: 1.1,
         loading: LOADING_URL,
+        error: LOADING_URL,
         beforeMount: function (img) {
           img.style.opacity = 0
         },
@@ -126,7 +122,6 @@
         onLoadMore: function (done) {
           var hasMore = appendSisters()
           if (hasMore) {
-            resize()
             loader.refresh()
             done()
           }else {
@@ -135,17 +130,6 @@
         }
       })
     }
-
-    function resize() {
-      if (window.innerWidth > 500) {
-        var imgArr = [].slice.call(document.querySelectorAll('img'))
-        var imgWidth = imgArr[0].clientWidth
-        for (var i = 0; i < imgArr.length; i++) {
-          imgArr[i].style.height = imgWidth * 2 + 'px';
-        }
-      }
-    }
-
   </script>
 </body>
 
