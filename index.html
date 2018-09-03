@@ -118,8 +118,7 @@
     }
 
     function initLoadMore() {
-      var images = ['./assets/images/timg1.jpeg', './assets/images/timg2.jpeg', './assets/images/timg3.jpeg', './assets/images/timg4.jpeg']
-      var loadMore = new EasyLazyLoad('.loading', {
+       var loadMore = new EasyLazyLoad('.loading', {
         onLoadMore: function (done) {
           var hasMore = appendSisters()
           if (hasMore) {
