@@ -44,7 +44,7 @@
       // 只要传入onLoadMore参数就会作为瀑布流插件加载
       onLoadMore: function (done) {
         ... // 到达底部执行的任何逻辑，一般用来插入节点，可以是同步也可以是异步, 异步的话注意done的调用时机
-            // 注意插入节点以后一般让.loading类挤到可见范围之外，否则调用了done()以后会继续出发onLoadMore
+            // 注意插入节点以后一般让.loading类挤到可见范围之外，否则调用了done()以后会继续触发onLoadMore
             
         loader.refresh() // 监听新加入的图片节点
 
