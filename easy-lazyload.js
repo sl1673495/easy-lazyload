@@ -128,7 +128,7 @@
       }
     },
     findIndex: function (arr, fn) {
-      var i
+      var i, len
       for (i = 0, len = arr.length; i < len; i++) {
         if (fn(arr[i])) {
           break
@@ -195,7 +195,7 @@
   // 初始化属性
   Load.prototype._initProperties = function (el, options) {
     this.loadMoreMode = !utils.isUndef(this.options.onLoadMore)
-    this.el = document.querySelector(el)
+    this.el = utils.isHTMLElement(el) ? el : document.querySelector(el)
 
     if (!this.el) {
       if (this.loadMoreMode) {
