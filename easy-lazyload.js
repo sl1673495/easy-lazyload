@@ -13,7 +13,34 @@
       window.addEventListener('test', null, opts)
     } catch (e) { }
     return support
-  })()
+  })();
+
+  // requestAnimationFrame polyfill
+  (function () {
+    var lastTime = 0
+    var startTime = new Date().getTime()
+    var vendors = ['ms', 'moz', 'webkit', 'o']
+    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+      window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame']
+      window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+        || window[vendors[x] + 'CancelRequestAnimationFrame']
+    }
+
+    if (!window.requestAnimationFrame)
+      window.requestAnimationFrame = function (callback, element) {
+        var currTime = new Date().getTime()
+        var timeToCall = Math.max(0, 16 - (currTime - lastTime))
+        var id = window.setTimeout(function () { callback(currTime - startTime) },
+          timeToCall)
+        lastTime = currTime + timeToCall;
+        return id
+      }
+
+    if (!window.cancelAnimationFrame)
+      window.cancelAnimationFrame = function (id) {
+        clearTimeout(id)
+      }
+  }())
 
   var cid = 0
 
@@ -370,19 +397,17 @@
       utils.loadImageAsync(
         this.src,
         function onSuccess(result) {
-          ctx.loadInstance.options.beforeMount && ctx.loadInstance._callHook('beforeMount', ctx.el)
-
-          var src = result.src
-          if ( ctx.loadInstance.options.mounted) {
-            // 如果用户定义了mounted生命周期， 有可能要进行一些dom操作触发动画， 必须把render放在下一个事件周期里执行，防止被浏览器引擎优化多次dom修改成同一次。
-            setTimeout(function () {
-              ctx.render('success', src)
-              ctx.loadInstance._callHook('mounted', ctx.el)          
-            }, 17);
-          } else {
-            ctx.render('success', src)
+          var beforeMount = ctx.loadInstance.options.beforeMount
+          if (beforeMount) {
+            ctx.loadInstance._callHook('beforeMount', ctx.el)
+            // beforeMount可以设置动画的一些初始值，需要手动触发一次重绘
+            ctx.el.offsetTop
           }
-
+          var src = result.src
+          ctx.render('success', src)
+          if (ctx.loadInstance.options.mounted) {
+            ctx.loadInstance._callHook('mounted', ctx.el)
+          }
           ctx.finishLoading()
         },
         function onError() {
