@@ -17,5 +17,5 @@ export default {
       }
     })
   ],
-  treeshake: false
+  treeshake: false // treeshaking导致手动触发重绘的代码被删除
 };
