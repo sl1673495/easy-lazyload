@@ -1,0 +1,29 @@
+{
+  "name": "easy-lazyload",
+  "version": "1.0.0",
+  "description": "原生js实现的图片懒加载库。 预览地址： https://sl1673495.github.io/easy-lazyload/",
+  "main": "dist/index.js",
+  "directories": {
+    "doc": "doc"
+  },
+  "scripts": {
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sl1673495/easy-lazyload.git"
+  },
+  "keywords": [
+    "lazyload",
+    "easy-lazyload"
+  ],
+  "devDependencies": {
+    "rollup": "0.67.3"
+  },
+  "author": "ssh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/sl1673495/easy-lazyload/issues"
+  },
+  "homepage": "https://github.com/sl1673495/easy-lazyload#readme"
+}
