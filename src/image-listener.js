@@ -35,7 +35,7 @@ ImageListener.prototype.load = function () {
         if (beforeMount) {
           ctx.loadInstance._callHook('beforeMount', ctx.el)
           // beforeMount可以设置动画的一些初始值，需要手动触发一次重绘
-          console.log(ctx.el.offsetTop)
+          ctx.el.offsetTop
         }
         var src = result.src
         ctx.render('success', src)
