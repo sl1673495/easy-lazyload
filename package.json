@@ -18,7 +18,8 @@
     "easy-lazyload"
   ],
   "devDependencies": {
-    "rollup": "0.67.3"
+    "rollup": "0.67.3",
+    "rollup-plugin-uglify": "^6.0.2"
   },
   "author": "ssh",
   "license": "ISC",

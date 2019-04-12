@@ -56,17 +56,17 @@ var utils = {
   overflow: function (el) {
     return utils.style(el, 'overflow') + utils.style(el, 'overflow-y') + utils.style(el, 'overflow-x')
   },
-  isHTMLElement(el) {
+  isHTMLElement: function (el) {
     return el instanceof HTMLElement
   },
-  isArray(v) {
+  isArray: function(v) {
     return v instanceof Array
   },
   scrollParent: function (el) {
     if (!(utils.isHTMLElement(el))) {
       return window
     }
-    let parent = el
+    var parent = el
     while (parent) {
       if (parent === document.body || parent === document.documentElement) {
         break
