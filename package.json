@@ -1,6 +1,6 @@
 {
   "name": "easy-lazyload",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "原生js实现的图片懒加载库。 预览地址： https://sl1673495.github.io/easy-lazyload/",
   "main": "dist/index.js",
   "directories": {
