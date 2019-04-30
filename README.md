@@ -2,6 +2,10 @@
 原生js实现的图片懒加载库。
 预览地址： https://sl1673495.github.io/easy-lazyload/
 
+#### 安装
+```npm i easy-lazyload```
+或引入打包好的js文件
+
 #### 使用说明
 ```
   <div class="img-wrap">
