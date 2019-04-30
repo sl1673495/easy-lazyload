@@ -4,7 +4,7 @@
 
 #### 安装
 ```npm i easy-lazyload```
-或引入打包好的js文件
+或引入打包好的dist/index.js文件
 
 #### 使用说明
 ```
