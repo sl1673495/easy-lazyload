@@ -1,12 +1,13 @@
 # easy-lazyload
 原生js实现的图片懒加载库。
 预览地址： https://sl1673495.github.io/easy-lazyload/
+预览源码：https://github.com/sl1673495/easy-lazyload/blob/master/docs/index.html
 
-#### 安装
+## 安装
 ```npm i easy-lazyload```
 或引入打包好的dist/index.js文件
 
-#### 使用说明
+## 使用说明
 ```
   <div class="img-wrap">
     <img data-src="./assets/images/timg1.jpeg" />
@@ -40,7 +41,7 @@
  loader.destory(): 移除一个实例的所有事件监听。
 ```
 
-#### 作为瀑布流插件使用
+## 作为瀑布流插件使用
 ```
 .loading作为列表底部的加载提示，比如一行'正在加载'的文字，和懒加载的逻辑一样，在合适的时机触发回调即可完成无限加载的效果。
 
